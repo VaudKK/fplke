@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.UUID;
+import java.util.function.Function;
 
 @Table(name = "fpl_users")
 @Entity
@@ -83,6 +84,10 @@ public class User extends Audit implements UserDetails {
         this.roles = Constants.Roles.ROLE_USER;
 
         return this;
+    }
+
+    public void encodePassword(Function<String,String> encoderFunction){
+        this.userPass = encoderFunction.apply(this.userPass);
     }
 
 }

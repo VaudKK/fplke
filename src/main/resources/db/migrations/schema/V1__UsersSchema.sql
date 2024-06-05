@@ -1,11 +1,12 @@
 CREATE TABLE IF NOT EXISTS fpl_users
 (
     user_id character varying(255) not null,
-    team_id bigint not null,
+    team_id bigint unique not null,
     first_name character varying(255),
     last_name character varying(255),
     email  character varying (255) unique not null,
     username  character varying (255) not null,
+    user_pass  character varying (255) not null,
     roles  character varying (255) not null,
     enabled boolean not null,
     credential_expired boolean not null,
