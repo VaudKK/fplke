@@ -11,7 +11,7 @@ COPY --from=build /app/target/*.jar ms-authentication.jar
 
 EXPOSE 8080
 
-CMD ["java","-Dspring.profiles.active=production","-jar","ms-authentication.jar"]
+ENTRYPOINT ["java","-Dspring.profiles.active=production","-jar","ms-authentication.jar"]
 
 
 ##
