@@ -77,8 +77,7 @@ public class JwtServiceImpl implements JwtService {
     }
 
     private Key getKey(){
-        var keyBytes = Decoders.BASE64.decode(secret);
-        return Keys.hmacShaKeyFor(keyBytes);
+        return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
     private Claims extractClaimsFromToken(String token) {

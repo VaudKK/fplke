@@ -1,6 +1,7 @@
 package com.fplke.msauthentication.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fplke.msauthentication.client.dto.response.FplEntryResponse;
 import com.fplke.msauthentication.dto.request.CreateUserDto;
 import com.fplke.msauthentication.models.audit.Audit;
 import com.fplke.msauthentication.utils.Constants;
@@ -42,6 +43,7 @@ public class User extends Audit implements UserDetails {
         return AuthorityUtils.createAuthorityList(roles.split(","));
     }
 
+    @JsonIgnore
     @Override
     public String getPassword() {
         return this.getUserPass();
@@ -49,7 +51,7 @@ public class User extends Audit implements UserDetails {
 
     @Override
     public String getUsername() {
-        return getEmail();
+        return username;
     }
 
     @Override
@@ -72,7 +74,7 @@ public class User extends Audit implements UserDetails {
         return getEnabled();
     }
 
-    public User buildNewUser(CreateUserDto createUserDto){
+    public User buildNewUser(CreateUserDto createUserDto, FplEntryResponse fplEntryResponse){
         this.userId = UUID.randomUUID().toString().replace("-","");
         this.email = createUserDto.email();
         this.userPass = createUserDto.password();
@@ -81,6 +83,9 @@ public class User extends Audit implements UserDetails {
         this.enabled = true;
         this.credentialExpired = false;
         this.accountLocked = false;
+        this.firstName = fplEntryResponse.playerFirstName();
+        this.lastName = fplEntryResponse.playerLastName();
+
         this.roles = Constants.Roles.ROLE_USER;
 
         return this;
