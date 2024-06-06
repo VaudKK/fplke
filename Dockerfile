@@ -1,15 +1,6 @@
-#
-# Build stage
-#
+FROM openjdk:17-jdk-slim AS build
+COPY . .
+RUN mvn clean package -DskipTests
 FROM openjdk:17-jdk-slim
-COPY src /home/app/src
-COPY pom.xml /home/app
-RUN mvn -f /home/app/pom.xml clean package
-
-#
-# Package stage
-#
-FROM openjdk:17-jdk-slim
-COPY --from=build /home/app/target/*.jar /usr/local/lib/ms-authentication.jar
-EXPOSE 8080
-ENTRYPOINT ["java","-jar","/usr/local/lib/ms-authentication.jar"]
+COPY --from=build /target/*.jar ms-authentication.jar
+ENTRYPOINT ["java","-Dspring.profiles.active=production","-jar","ms-authentication.jar"]
