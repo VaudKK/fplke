@@ -1,7 +1,3 @@
-LABEL authors="vaudk"
-
-EXPOSE 8080
-
 #
 # Build stage
 #
