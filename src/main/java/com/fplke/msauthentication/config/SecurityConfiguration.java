@@ -2,6 +2,7 @@ package com.fplke.msauthentication.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,13 +17,30 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfiguration {
 
+    private final String[] WHITE_LIST = {
+            "/api/v1/auth/create",
+            "/api/v1/auth/login"
+    };
+
     @Bean
+    @Order(0)
+    public SecurityFilterChain securityWebFilterChainWhiteList(HttpSecurity http) throws Exception {
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(requests ->
+                        requests
+                                .requestMatchers(WHITE_LIST).permitAll());
+        return http.build();
+    }
+
+    @Bean
+    @Order(1)
     public SecurityFilterChain securityWebFilterChain(HttpSecurity http,
                                                       UserDetailsService userDetailService) throws Exception {
         http
                 .authorizeHttpRequests(requests ->
                         requests
-                                .anyRequest().permitAll())
+                                .anyRequest().authenticated())
                 .sessionManagement(session ->
                         session
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
