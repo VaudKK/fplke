@@ -76,7 +76,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             throw new BadCredentialsException("Invalid credentials");
         }
 
-        var token = jwtService.generateToken(Map.of("username",user.get().getUsername()),user.get());
+        var token = jwtService.generateToken(Map.of("username",user.get().getUsername(),
+                        "team",user.get().getTeamId(),
+                        "authorities",user.get().getRoles().split(",")),
+                user.get());
         return new TokenDto(token, jwtService.getExpiresIn()/1000);
     }
 
