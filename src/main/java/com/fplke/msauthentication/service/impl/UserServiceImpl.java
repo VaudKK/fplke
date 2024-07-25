@@ -12,6 +12,7 @@ import com.fplke.msauthentication.service.JwtService;
 import com.fplke.msauthentication.service.UserService;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -57,12 +58,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User findUserByEmail(String email) {
-        var user = userRepository.findByEmail(email);
-        if(user.isEmpty()){
-            throw new UsernameNotFoundException("User not found");
-        }
-        return user.get();
+    public User getUserDetails(Authentication authentication) {
+        var userId = authentication.getName();
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     @Override

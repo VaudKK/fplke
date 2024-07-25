@@ -8,6 +8,7 @@ import com.fplke.msauthentication.exceptions.model.ApiError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -43,6 +44,12 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = { TeamIdException.class })
     protected ResponseEntity<Object> handleTeamIdException(TeamIdException ex) {
         var apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR,"Could not verify team Id",ex.getLocalizedMessage());
+        return buildResponseEntity(apiError);
+    }
+
+    @ExceptionHandler(value = { UsernameNotFoundException.class })
+    protected ResponseEntity<Object> handleUsernameNotFoundException(UsernameNotFoundException ex) {
+        var apiError = new ApiError(HttpStatus.NOT_FOUND,"User not found",ex.getLocalizedMessage());
         return buildResponseEntity(apiError);
     }
 
